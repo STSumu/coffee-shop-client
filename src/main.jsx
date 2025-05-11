@@ -8,6 +8,12 @@ import UpdateCoffee from "./components/UpdateCoffee.jsx";
 import Home from "./components/Home.jsx";
 import ProductDetails from "./components/ProductDetails.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
+import SignUp from "./components/authentication/SignUp.jsx";
+import SignIn from "./components/authentication/SignIn.jsx";
+import AuthLayout from "./components/authentication/AuthLayout.jsx";
+import AuthProvider from "./Provider/AuthProvider.jsx";
+import Users from "./components/Users.jsx";
+import UserUpdate from "./components/UserUpdate.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,12 +38,38 @@ const router = createBrowserRouter([
         path:'/coffee/:id',
         element:<ProductDetails></ProductDetails>,
         loader:({params})=>fetch(`http://localhost:5000/coffee/${params.id}`)
+      },
+      {
+        path:'/users',
+        element:<Users></Users>,
+        loader:()=>fetch('http://localhost:5000/users')
+      },
+      {
+        path:'/updateUser/:id',
+        element:<UserUpdate></UserUpdate>,
+        loader:({params})=>fetch(`http://localhost:5000/users/${params.id}`)
       }
     ],
   },
+  {
+    path:'auth',
+    element:<AuthLayout></AuthLayout>,
+    children:[
+      {
+        path:'/auth/signUp',
+        element:<SignUp></SignUp>,
+      },
+      {
+        path:'/auth/SignIn',
+        element:<SignIn></SignIn>,
+      }
+    ]
+  }
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
